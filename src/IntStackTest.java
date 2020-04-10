@@ -1,8 +1,18 @@
+/*
+    Name: Yin Lam Lai
+    PID:  A15779757
+ */
+
 import static org.junit.Assert.*;
 import java.util.EmptyStackException;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+/**
+ * JUnit testing for IntStack class
+ * @author Yin Lam lai
+ * @since  4/4/2020
+ */
 
 public class IntStackTest {
     IntStack test1;

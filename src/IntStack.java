@@ -6,9 +6,9 @@
 import java.util.EmptyStackException;
 
 /**
- * TODO
- * @author TODO
- * @since  TODO
+ * Stack creating class
+ * @author Yin Lam lai
+ * @since  4/4/2020
  */
 public class IntStack {
 
@@ -25,6 +25,14 @@ public class IntStack {
     private double shrinkFactor;
     private int initialCap;
 
+
+    /**
+     * Creates an IntStack with a given capacity, shrink factor, and load factor
+     * @param capacity Capacity of intStack
+     * @param loadF Load Factor
+     * @param shrinkF Shrink Factor
+     * @throws IllegalArgumentException if load factor/shrink factor/capacity is out of range
+     */
     public IntStack(int capacity, double loadF, double shrinkF) {
         if (capacity < MIN_INIT_CAPACITY) {
             throw new IllegalArgumentException("Capacity out of range");
@@ -45,6 +53,13 @@ public class IntStack {
         }
     }
 
+
+    /**
+     * Creates an IntStack with a given capacity and load factor
+     * @param capacity Capacity of intStack
+     * @param loadF Load Factor
+     * @throws IllegalArgumentException if capacity/load factor is out of range
+     */
     public IntStack(int capacity, double loadF) {
         if (capacity < MIN_INIT_CAPACITY) {
             throw new IllegalArgumentException("Capacity out of range");
@@ -57,10 +72,15 @@ public class IntStack {
             this.data = new int[initialCap];
             this.nElems = 0;
             this.loadFactor = loadF;
-            this.shrinkFactor = DEF_SHRINK_FACTOR ;
+            this.shrinkFactor = DEF_SHRINK_FACTOR;
         }
     }
 
+    /**
+     * Creates an IntStack with a given capacity
+     * @param capacity Capacity of intStack
+     * @throws IllegalArgumentException if capacity is out of range
+     */
     public IntStack(int capacity) {
         if (capacity < MIN_INIT_CAPACITY) {
             throw new IllegalArgumentException("Capacity out of range");
@@ -69,30 +89,46 @@ public class IntStack {
             this.data = new int[this.initialCap];
             this.nElems = 0;
             this.loadFactor = DEF_LOAD_FACTOR;
-            this.shrinkFactor = DEF_SHRINK_FACTOR ;
+            this.shrinkFactor = DEF_SHRINK_FACTOR;
         }
     }
 
+    /**
+     * Checks if the given Intstack is empty if yes return true, else, false
+     */
     public boolean isEmpty() {
-        if (nElems == 0){
+        if (nElems == 0) {
             return true;
         }
         return false;
     }
 
+    /**
+     * Clears the given IntStack and creates a new one with the initial capacity
+     */
     public void clear() {
         data = new int[initialCap];
         this.nElems = 0;
     }
 
+    /**
+     * returns the amount of stored items in the IntStack
+     */
     public int size() {
         return nElems;
     }
 
+    /**
+     * Returns the current capacity of the IntStack
+     */
     public int capacity() {
         return data.length;
     }
 
+    /**
+     * Returns the top element of the IntStack
+     * @throws EmptyStackException if stack is empty
+     */
     public int peek() {
         if (nElems == 0) {
             throw new EmptyStackException();
@@ -100,13 +136,17 @@ public class IntStack {
         return data[nElems - 1];
     }
 
+    /**
+     * Pushes an element into the stack, if it exceeds the load factor, capacity is doubled
+     * @param element element to be pushed
+     */
     public void push(int element) {
         double sizeD = this.size();
         double capacityD = this.capacity();
         if (sizeD / capacityD >= loadFactor) {
             int[] temp = new int[RESIZE_FACTOR * capacity()];
 
-            for(int n = 0; n < nElems; n++) {
+            for (int n = 0; n < nElems; n++) {
                 temp[n] = data[n];
             }
             data = temp;
@@ -115,6 +155,10 @@ public class IntStack {
         nElems++;
     }
 
+    /**
+     * pops the first element in the stack if the shrink factor is exceeded after, reduce capacity by half
+     * @throws EmptyStackException if stack is empty
+     */
     public int pop() {
         if (nElems == 0) {
             throw new EmptyStackException();
@@ -129,14 +173,14 @@ public class IntStack {
 
                 if (this.capacity() / RESIZE_FACTOR < initialCap) {
                     int[] temp = new int[capacity()];
-                    for(int n = 0; n < nElems; n++) {
+                    for (int n = 0; n < nElems; n++) {
                         temp[n] = data[n];
                     }
                     data = temp;
                 } else {
                     int[] temp = new int[capacity() / RESIZE_FACTOR];
 
-                    for(int n = 0; n < nElems; n++) {
+                    for (int n = 0; n < nElems; n++) {
                         temp[n] = data[n];
                     }
                     data = temp;
@@ -147,17 +191,27 @@ public class IntStack {
         }
     }
 
+    /**
+     * Pushes multiple elements into the stack, for each element, if it exceeds the load factor, capacity is doubled
+     * @param elements elements to be pushed into stack
+     * @throws IllegalArgumentException if elements is null
+     */
     public void multiPush(int[] elements) {
         if (elements == null) {
             throw new IllegalArgumentException("Elements is null!");
         }
-        for(int n : elements) {
+        for (int n : elements) {
             this.push(n);
         }
 
 
     }
 
+    /**
+     * Pushes multiple elements into the stack, for each element, if it exceeds the load factor, capacity is doubled
+     * @param amount pops amount of ints from the stack
+     * @throws IllegalArgumentException if amount is a negative number
+     */
     public int[] multiPop(int amount) {
         if (amount < 0) {
             throw new IllegalArgumentException();
@@ -167,13 +221,13 @@ public class IntStack {
             int[] results;
             if (temp >= amount) {
                 results = new int[amount];
-                for(int n = 0; n < amount; n++) {
+                for (int n = 0; n < amount; n++) {
                     results[n] = this.pop();
                 }
                 return results;
             } else {
                 results = new int[temp];
-                for(int n = 0; n < temp; n++) {
+                for (int n = 0; n < temp; n++) {
                     results[n] = this.pop();
                 }
                 return results;

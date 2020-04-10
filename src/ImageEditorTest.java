@@ -1,168 +1,168 @@
-import org.junit.*;
-import static org.junit.Assert.*;
+/*
+    Name: Yin Lam lai
+    PID:  A15779757
+ */
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
- * JUnit examples on testing Image Editor.
- *
- * You can use this test file to write your own test cases.
- * If you want to submit it, please change the information
- * below to your name and start date.
- * @author Yuxuan Fan
- * @since  4/6/2020
+ * JUnit testing for ImageEditor class
+ * @author Yin Lam lai
+ * @since  4/10/20
  */
-public class ImageEditorTest {
 
-    // Declare test variables on instance level so it can be
-    // shared among different test methods. Must do this for
-    // variables initialized in @Before methods.
-    ImageEditor ie1, ie2, ie3;
+
+
+public class ImageEditorTest {
+    ImageEditor test1;
+    ImageEditor test2;
+    ImageEditor test3;
+
+
+    public ImageEditorTest() {
+    }
 
     @Before
     public void setup() throws Exception {
-        // You can declare local variables if you need.
-        int[][] img1 = new int[][] {
-                new int[] {0, 0, 0},
-                new int[] {0, 0, 0},
-                new int[] {0, 0, 0}
-        };
-        // int[][] img2 = ...;
-        // int[][] img3 = ...;
+        int[][] img1 = new int[][]{{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+        int[][] img2 = new int[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
+        int[][] img3 = new int[][]{{0, 0}, {0, 0}, {0, 0}};
 
-        // Initialize the instance test variable here.
-        ie1 = new ImageEditor(img1);
-        // ie2 = new ImageEditor(img2);
-        // ie3 = new ImageEditor(img3);
+
+        this.test1 = new ImageEditor(img1);
+        this.test2 = new ImageEditor(img2);
+        this.test3 = new ImageEditor(img3);
     }
 
-
-    // You can declare private helper methods in JUnit files.
-    // This will save your works, especially during tedious
-    // testing processes like testing a 2D array.
     private void assert2DArrayEquals(int[][] expecteds, int[][] actuals) {
-        // if two arguments are referring to the same int[][], they are equal
         if (expecteds != actuals) {
+            if (expecteds == null || actuals == null) {
+                Assert.fail("null argument");
+            }
 
-            // fail() method will fail the test directly, can add messages
-            // which will appear with the exception trace on the console
+            if (expecteds.length != actuals.length) {
+                Assert.fail("different i-dimension");
+            }
 
-            // check null
-            if ((expecteds == null) || (actuals == null)) fail("null argument");
-
-            // check i-dimension
-            if (expecteds.length != actuals.length) fail("different i-dimension");
-
-            // iterate through i-dimension to check j-dimension
-            for (int i = 0; i < expecteds.length; i++) {
-                assertArrayEquals("different row at index " + i, expecteds[i], actuals[i]);
+            for(int i = 0; i < expecteds.length; ++i) {
+                Assert.assertArrayEquals("different row at index " + i, expecteds[i], actuals[i]);
             }
         }
+
     }
 
-
-    // Assert exception is thrown
-    //
-    // Notice that, with this approach, one test method can only
-    // assert one throw, so you need multiple test methods if
-    // you want to assert multiple throw of exceptions.
-    @Test (expected = IllegalArgumentException.class)
+    @Test(
+            expected = IllegalArgumentException.class
+    )
     public void testConstructorEmptyImageThrowsIAE() {
-        ImageEditor ieEmpty = new ImageEditor(new int[0][0]);
+        new ImageEditor(new int[0][0]);
+        new ImageEditor(new int[][]{{0, 0}, {0}, {0, 0}});
     }
 
-
-    // Example of testing one method. You can increase the
-    // number of operations easily by utilizing loops.
     @Test
-    public void testAssign() {
-        // use for-loop to do more operations easily
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                ie1.assign(i, j, i+j);
+    public void getImage() {
+        int[][] imgtest1 = new int[][]{{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+        int[][] imgtest2 = new int[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
+        int[][] imgtest3 = new int[][]{{0, 0}, {0, 0}, {0, 0}};
+        this.assert2DArrayEquals(imgtest1, this.test1.getImage());
+        this.assert2DArrayEquals(imgtest2, this.test2.getImage());
+        this.assert2DArrayEquals(imgtest3, this.test3.getImage());
+    }
+
+    @Test
+    public void Assign() {
+        for(int i = 0; i < 3; ++i) {
+            for(int j = 0; j < 3; ++j) {
+                this.test1.assign(i, j, i + j);
             }
         }
 
-        // assert
-        int[][] expected = new int[][] {
-                new int[] {0, 1, 2},
-                new int[] {1, 2, 3},
-                new int[] {2, 3, 4}
-        };
-        assert2DArrayEquals(expected, ie1.getImage());
+        int[][] expected1 = new int[][]{{0, 1, 2}, {1, 2, 3}, {2, 3, 4}};
+        this.assert2DArrayEquals(expected1, this.test1.getImage());
+
+        try {
+            this.test2.assign(5, 5, 200);
+        } catch (IndexOutOfBoundsException var3) {
+            System.out.println("Row or column is out of bounds!");
+        }
+
+        this.test3.assign(0, 0, 200);
+        this.test3.assign(1, 0, 200);
+        this.test3.assign(2, 0, 200);
+        int[][] expected3 = new int[][]{{200, 0}, {200, 0}, {200, 0}};
+        this.assert2DArrayEquals(expected3, this.test3.getImage());
     }
 
-
-    // You can also simulate a real-world situation in
-    // a test method. You can use multiple methods and
-    // assert the output after each stage.
     @Test
-    public void testRealWorldSituation() {
-        // for loop that performs 3 * 3 * 2 = 18 operations in total
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                ie1.assign(i, j, i*j);
-                ie1.scale(i, j, 1.5);
-            }
+    public void scale() {
+        try {
+            this.test1.scale(5, 5, 2.0D);
+        } catch (IndexOutOfBoundsException var3) {
+            System.out.println("Row or column is out of bounds!");
         }
 
-        // you should trace the above operations by hand
-        // and hardcode the result you get as expected result
-        int[][] expected1 = new int[][] {
-                new int[] {0, 0, 0},
-                new int[] {0, 1, 3},
-                new int[] {0, 3, 6}
-        };
-        assert2DArrayEquals(expected1, ie1.getImage());
-
-        // undo 4 operations. since we did 18 operations,
-        // all undo() calls should return true
-        for (int i = 0; i < 4; i++) {
-            assertTrue(ie1.undo());
-        }
-
-        // then check the image. the undone 4 operations were
-        // performed on position (2, 1) and (2, 2), so after
-        // undoing them, colors on these positions should be
-        // reset to 0
-        int[][] expected2 = new int[][] {
-                new int[] {0, 0, 0},
-                new int[] {0, 1, 3},
-                new int[] {0, 0, 0}  // notice the change here
-        };
-        assert2DArrayEquals(expected2, ie1.getImage());
-
-        // redo 2 operations, so that we can restore the value
-        // at position (2, 1)
-        for (int i = 0; i < 2; i++) {
-            assertTrue(ie1.redo());
-        }
-
-        int[][] expected3 = new int[][] {
-                new int[] {0, 0, 0},
-                new int[] {0, 1, 3},
-                new int[] {0, 3, 0}  // notice the change here
-        };
-        assert2DArrayEquals(expected3, ie1.getImage());
-
-        // assign position (2, 2) directly, and then redo 2 operations.
-        // since a new operation is performed, the redo stack is cleared,
-        // so the redo() calls should return false
-        ie1.assign(2, 2, 255);
-        for (int i = 0; i < 2; i++) {
-            assertFalse(ie1.redo());
-        }
-
-        int[][] expected4 = new int[][] {
-                new int[] {0, 0,   0},
-                new int[] {0, 1,   3},
-                new int[] {0, 3, 255}  // notice the change here
-        };
-        assert2DArrayEquals(expected4, ie1.getImage());
-
-        // if you are confident enough that your operations
-        // will not affect other entries, you don't have to
-        // assert the entire 2D array all the time, just
-        // asserting the modified positions will suffice
-        assertEquals(255, ie1.getImage()[2][2]);
+        this.test2.assign(0, 0, 200);
+        this.test2.scale(0, 0, 2.0D);
+        int[][] expected2 = new int[][]{{255, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
+        this.assert2DArrayEquals(expected2, this.test2.getImage());
+        this.test3.assign(0, 0, 2);
+        this.test3.scale(0, 0, 2.0D);
+        int[][] expected3 = new int[][]{{4, 0}, {0, 0}, {0, 0}};
+        this.assert2DArrayEquals(expected3, this.test3.getImage());
     }
 
+    @Test
+    public void delete() {
+        this.test1.assign(0, 0, 2);
+        int[][] ex1 = new int[][]{{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+        this.test1.delete(0, 0);
+        this.assert2DArrayEquals(ex1, this.test1.getImage());
+        this.test2.assign(0, 0, 2);
+        this.test2.assign(0, 1, 8);
+        this.test2.delete(0, 0);
+        this.test2.delete(0, 1);
+        int[][] ex2 = new int[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
+        this.assert2DArrayEquals(ex2, this.test2.getImage());
+
+        try {
+            this.test3.delete(9, 1);
+        } catch (IndexOutOfBoundsException var4) {
+            System.out.println("Row or column is out of bounds!");
+        }
+
+    }
+
+    @Test
+    public void undo() {
+        int[][] ex2 = new int[][]{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
+        int[][] var10000 = new int[][]{{0, 0}, {0, 0}, {0, 0}};
+        Assert.assertFalse(this.test1.undo());
+        this.test2.assign(0, 0, 1);
+        this.test2.undo();
+        this.assert2DArrayEquals(ex2, this.test2.getImage());
+        this.test3.assign(0, 0, 1);
+        this.test3.assign(0, 1, 1);
+        this.test3.undo();
+        this.test3.undo();
+        this.assert2DArrayEquals(ex2, this.test2.getImage());
+    }
+
+    @Test
+    public void redo() {
+        int[][] ex2 = new int[][]{{1, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
+        int[][] ex3 = new int[][]{{1, 1}, {0, 0}, {0, 0}};
+        Assert.assertFalse(this.test1.undo());
+        this.test2.assign(0, 0, 1);
+        this.test2.undo();
+        this.test2.redo();
+        this.assert2DArrayEquals(ex2, this.test2.getImage());
+        this.test3.assign(0, 0, 1);
+        this.test3.assign(0, 1, 1);
+        this.test3.undo();
+        this.test3.redo();
+        this.test3.redo();
+        this.assert2DArrayEquals(ex3, this.test3.getImage());
+    }
 }
